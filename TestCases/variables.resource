@@ -1,2 +1,2 @@
 *** Variables ***
-${BASE_URL}  https://oauth.reddit.com/api/
+${BASE_URL}  https://oauth.reddit.com

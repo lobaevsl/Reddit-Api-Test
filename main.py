@@ -1,3 +1,6 @@
+import json
+import time
+
 import variables
 import requests
 from requests.auth import HTTPBasicAuth
@@ -23,25 +26,23 @@ def authenticate():
 
 def set_token():
     file = open('token', 'r')
-    tkn = file.read()
+    variables.token = file.read()
     file.close()
-    if len(tkn) == 0:
+    if len(variables.token) == 0:
         authenticate()
-    else:
-        variables.token = tkn
 
 
-def search(params: dict) -> requests.Response:
-    _res = requests.get('https://oauth.reddit.com/api/search',
+def api_request(method: str, params: dict = None) -> requests.Response:
+    _res = requests.get(f'{variables.API_URL}{method}',
                         params=params,
                         headers=variables.headers)
     return _res
 
 
-def api_request(method: str, params: dict) -> requests.Response:
-    _res = requests.get(f'https://oauth.reddit.com/api/{method}',
-                        params=params,
-                        headers=variables.headers)
+def api_request_post(method: str, params: dict = None) -> requests.Response:
+    _res = requests.post(f'{variables.API_URL}{method}',
+                         params=params,
+                         headers=variables.headers)
     return _res
 
 
@@ -50,5 +51,8 @@ if __name__ == '__main__':
     set_token()
     variables.headers = {**variables.headers, **{'Authorization': f"bearer {variables.token}"}}
 
-    # robot.run('TestCases/reddit.robot')
+    variables.params_search = {'query': f'r/{variables.search_key}'}
+    variables.params_comment = {'thing_id': f't3_{variables.POST_ID}',
+                                'text': 'I LIKE PYTHON! WOW'}
 
+    robot.run('TestCases/reddit.robot')
