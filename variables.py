@@ -1,7 +1,7 @@
 APP_ID = 'Your App ID'
 APP_SECRET = 'Your App secret'
-USERNAME = 'your reddit username'
-PASSWORD = 'your reddit password'
+USERNAME = 'Your Reddit username'
+PASSWORD = 'Your Reddit password'
 API_URL = 'https://oauth.reddit.com'
 POST_ID = '11r5tkq'
 
