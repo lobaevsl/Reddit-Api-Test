@@ -1,9 +1,8 @@
-APP_ID = 'HXPD0O2Y1yYBBk6-jz6SEQ'
-APP_SECRET = 'jF0dLcbY_Gt3b74jYVXXFfmMmax_Sw'
-USERNAME = 'lobaevsl'
-PASSWORD = ':Tp5azma&5RdG-U'
+APP_ID = 'Your App ID'
+APP_SECRET = 'Your App secret'
+USERNAME = 'your reddit username'
+PASSWORD = 'your reddit password'
 API_URL = 'https://oauth.reddit.com'
-MODHASH = 'yq1w439bxkbffcd22b0655ca445615e01a5917221d7486329d'
 POST_ID = '11r5tkq'
 
 token = None
