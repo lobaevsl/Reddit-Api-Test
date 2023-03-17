@@ -15,13 +15,14 @@ def authenticate():
         print('Token found. Enter with an existing account? Y/N')
         while True:
             _c = input()
-            if _c in 'yY':
+            if _c not in ('y', 'Y', 'n', 'N'):
+                print('Enter Y or N!')
+                continue
+            if _c in ('y', 'Y'):
                 variables.headers = {**variables.headers, **{'Authorization': f"bearer {_token}"}}
                 return
-            elif _c in 'nN':
+            if _c in ('n', 'N'):
                 break
-            else:
-                print('Input Y or N!')
 
     # Аутентификация
     while True:
@@ -40,7 +41,7 @@ def authenticate():
                  'username': _login,
                  'password': _password}
         _response = requests.post('https://www.reddit.com/api/v1/access_token',
-                                  auth=_auth, data=_data, headers=variables.headers)
+                                  auth=_auth, data=_data, headers=variables.headers, timeout=5)
         if 'access_token' not in _response.json():
             print('Access denied, check your app id/secret or login/password')
         else:
@@ -57,12 +58,14 @@ def authenticate():
 def get_api_request(method: str, params: dict = None) -> requests.Response:
     _res = requests.get(f'{variables.API_URL}{method}',
                         params=params,
-                        headers=variables.headers)
+                        headers=variables.headers,
+                        timeout=5)
     return _res
 
 
 def post_api_request(method: str, params: dict = None) -> requests.Response:
     _res = requests.post(f'{variables.API_URL}{method}',
                          params=params,
-                         headers=variables.headers)
+                         headers=variables.headers,
+                         timeout=5)
     return _res
