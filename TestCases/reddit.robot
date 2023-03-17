@@ -8,29 +8,25 @@ Documentation    Reddit API test
 Library          Collections
 Library          RequestsLibrary
 Library          JSONLibrary
+
 Variables        ../variables.py
 
+Suite Setup    Create Session      reddit      ${API_URL}     verify=true     headers=${headers}
 
 *** Test Cases ***
 Get Thread
-    Create Session      reddit      ${API_URL}     verify=true     headers=${headers}
+    ${response}=     GET On Session  reddit  ${api_method_search_thread}     params=${params_search}
 
-    ${resp_reddit}=     GET On Session  reddit  /api/search_reddit_names     params=${params_search}
-
-    Status Should Be    200     ${resp_reddit}
-    Should Contain      ${resp_reddit.json()}    names
+    Status Should Be    200     ${response}
+    Should Contain      ${response.json()}    names
 
 Comment
-    Create Session      reddit      ${API_URL}     verify=true     headers=${headers}
+    ${response}=     POST On Session    reddit    ${api_method_add_comment}    params=${params_comment}
+    Status Should Be    200     ${response}
+    Should Be True      ${response.json()['success']}
 
-    ${resp_reddit}=     POST On Session    reddit    /api/comment    params=${params_comment}
-    Status Should Be    200     ${resp_reddit}
-    Should Be True      ${resp_reddit.json()['success']}
-
-    Set Suite Variable    ${comment_id}     ${resp_reddit.json()['jquery'][18][3][0][0]['data']['id']}
+    Set Suite Variable    ${comment_id}     ${response.json()['jquery'][18][3][0][0]['data']['id']}
 
 Delete Comment
-    Create Session      reddit      ${API_URL}     verify=true     headers=${headers}
-
-    ${resp_reddit}=     POST On Session    reddit   /api/del    params=id=t1_${comment_id}
-    Status Should Be    200     ${resp_reddit}
+    ${response}=     POST On Session    reddit   ${api_method_delete_comment}    params=id=t1_${comment_id}
+    Status Should Be    200     ${response}
