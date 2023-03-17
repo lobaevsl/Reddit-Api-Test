@@ -2,6 +2,8 @@ USER_AGENT = 'LobaevScript'
 API_URL = 'https://oauth.reddit.com'
 POST_ID = '11r5tkq'
 
+headers = None
+
 params_search = None
 params_comment = None
 comment_id = None
