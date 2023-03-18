@@ -9,31 +9,39 @@ Library          Collections
 Library          RequestsLibrary
 Library          JSONLibrary
 Library          ../variables/params.py   WITH NAME   Params
+Library          ../reddit_api.py   WITH NAME   Api
 
 Variables        ../variables/constants.py
 Variables        ../variables/api_methods.py
 
-Suite Setup      Create Session      reddit      ${API_URL}     verify=true     headers=
-
 *** Variables ***
-
-
+${headers}
+${search_thread_text}=  Minecraft
+${comment_text}=    Like Python
 
 *** Test Cases ***
 Case
+    ${token}=   Api.get_token
+    ${headers}=   Params.get_headers    ${token}
+    Create Session      reddit      ${API_URL}     verify=true     headers=${headers}
+
     Find Thread
-    ${comment_id}=  Comment
+    ${comment_id}=  Add Comment
     Delete Comment  ${comment_id}
 
 *** Keywords ***
 Find Thread
-    ${response}=     GET On Session  reddit  ${search_thread}     params=${params_search}
+
+    ${params}=  Params.get_params_search_thread    ${search_thread_text}
+    ${response}=     GET On Session  reddit  ${search_thread}     params=${params}
 
     Status Should Be    200     ${response}
     Should Contain      ${response.json()}    names
 
-Comment
-    ${response}=     POST On Session    reddit    ${add_comment}    params=${params_comment}
+Add Comment
+    ${params}=  Params.get_params_add_comment    ${comment_text}
+    ${response}=     POST On Session    reddit    ${add_comment}    params=${params}
+
     Status Should Be    200     ${response}
     Should Be True      ${response.json()['success']}
 

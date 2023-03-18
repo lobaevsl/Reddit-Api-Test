@@ -4,7 +4,7 @@ import keyring
 from variables import constants, params
 
 
-def authenticate():
+def get_token():
     # Просмотр сохранённого токена
     token = keyring.get_password(constants.USER_AGENT, 'user_token')
     if token is not None:
@@ -41,12 +41,12 @@ def authenticate():
             print('Access denied, check your app id/secret or login/password')
         else:
             break
-    params.token = response.json()['access_token']
+    token = response.json()['access_token']
 
     # Сохранение токена
     keyring.set_password(constants.USER_AGENT, 'user_token', params.token)
 
-    return params.token
+    return token
 
 
 def get_api_request(method: str, parameters: dict = None) -> requests.Response:
