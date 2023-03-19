@@ -1,23 +1,36 @@
+import os
 import requests
 from requests.auth import HTTPBasicAuth
+
 import keyring
+from dotenv import load_dotenv
+
 from variables import constants, params
 
 
-def get_token():
+def load_environ():
+    dotenv_path = os.path.join(os.path.dirname(__file__), 'login.env')
+    if os.path.exists(dotenv_path):
+        return load_dotenv(dotenv_path)
+    return False
+
+
+def get_token(use_existing):
     # Просмотр сохранённого токена
     token = keyring.get_password(constants.USER_AGENT, 'user_token')
-    if token is not None:
-        print('Token found. Enter with an existing account? Y/N')
-        while True:
-            _c = input()
-            if _c not in ('y', 'Y', 'n', 'N'):
-                print('Enter Y or N!')
-                continue
-            if _c in ('y', 'Y'):
-                return token
-            if _c in ('n', 'N'):
-                break
+    if token is not None and use_existing:
+        return token
+
+    if load_environ():
+        login_result = log_in(
+            os.getenv('APP_ID'),
+            os.getenv('APP_SECRET'),
+            os.getenv('LOGIN'),
+            os.getenv('PASSWORD'),
+        )
+        if login_result[0]:
+            keyring.set_password(constants.USER_AGENT, 'user_token', login_result[1])
+            return login_result[1]
 
     # Аутентификация
     while True:
@@ -31,22 +44,31 @@ def get_token():
         print('Enter password:')
         password = input()
 
-        auth = HTTPBasicAuth(app_id, app_secret)
-        data = {'grant_type': 'password',
-                'username': login,
-                'password': password}
-        response = requests.post('https://www.reddit.com/api/v1/access_token',
-                                 auth=auth, data=data, headers=params.get_headers(), timeout=5)
-        if 'access_token' not in response.json():
-            print('Access denied, check your app id/secret or login/password')
-        else:
+        login_result = log_in(
+            app_id,
+            app_secret,
+            login,
+            password
+        )
+        if login_result[0]:
             break
-    token = response.json()['access_token']
 
     # Сохранение токена
-    keyring.set_password(constants.USER_AGENT, 'user_token', params.token)
+    keyring.set_password(constants.USER_AGENT, 'user_token', login_result[1])
+    return login_result[1]
 
-    return token
+
+def log_in(app_id, app_secret, login, password):
+    auth = HTTPBasicAuth(app_id, app_secret)
+    data = {'grant_type': 'password',
+            'username': login,
+            'password': password}
+    response = requests.post('https://www.reddit.com/api/v1/access_token',
+                             auth=auth, data=data, headers=params.get_headers(), timeout=5)
+    if 'access_token' not in response.json():
+        return False
+    else:
+        return True, response.json()['access_token']
 
 
 def get_api_request(method: str, parameters: dict = None) -> requests.Response:

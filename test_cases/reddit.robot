@@ -15,13 +15,14 @@ Variables        ../variables/constants.py
 Variables        ../variables/api_methods.py
 
 *** Variables ***
+${token}
 ${headers}
 ${search_thread_text}=  Minecraft
 ${comment_text}=    Like Python
 
 *** Test Cases ***
 Case
-    ${token}=   Api.get_token
+    ${token}=   Api.get_token   True
     ${headers}=   Params.get_headers    ${token}
     Create Session      reddit      ${API_URL}     verify=true     headers=${headers}
 

@@ -1,4 +1,4 @@
 import robot
 
 
-robot.run('TestCases/reddit.robot')
+robot.run('test_cases/reddit.robot')
