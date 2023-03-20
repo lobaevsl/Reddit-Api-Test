@@ -8,11 +8,16 @@ Documentation    Reddit API test
 Library          Collections
 Library          RequestsLibrary
 Library          JSONLibrary
+
 Library          ../variables/params.py   WITH NAME   Params
+Library          ../variables/authorization.py  WITH NAME   Auth
 Library          ../reddit_api.py   WITH NAME   Api
 
 Variables        ../variables/constants.py
 Variables        ../variables/api_methods.py
+
+Test Setup    Log In
+Test Teardown    Log Out
 
 *** Variables ***
 ${token}
@@ -22,8 +27,6 @@ ${comment_text}=    Like Python
 
 *** Test Cases ***
 Case
-    ${token}=   Api.get_token   True
-    ${headers}=   Params.get_headers    ${token}
     Create Session      reddit      ${API_URL}     verify=true     headers=${headers}
 
     Find Thread
@@ -31,8 +34,14 @@ Case
     Delete Comment  ${comment_id}
 
 *** Keywords ***
-Find Thread
+Log In
+    ${token}=   Auth.get_token
+    ${headers}=   Params.get_headers    ${token}
 
+Log Out
+    # ???
+
+Find Thread
     ${params}=  Params.get_params_search_thread    ${search_thread_text}
     ${response}=     GET On Session  reddit  ${search_thread}     params=${params}
 
