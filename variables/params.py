@@ -1,5 +1,7 @@
 import variables.constants as constants
 
+comment_id = ''
+
 
 def get_headers(token: str = None):
     return {
@@ -19,3 +21,12 @@ def get_params_add_comment(text: str = 'I LIKE PYTHON! WOW', post_id: str = cons
         'thing_id': f't3_{post_id}',
         'text': text
     }
+
+
+def get_comment_id():
+    return comment_id
+
+
+def set_comment_id(id: str):
+    global comment_id
+    comment_id = id

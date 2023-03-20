@@ -1,10 +1,4 @@
 *** Settings ***
-Documentation    Reddit API test
-...              1. Find thread by key
-...              2. Write a comment
-...              3. Remove a comment
-...              variables.py SHOULD BE filled
-
 Library          Collections
 Library          RequestsLibrary
 Library          JSONLibrary
@@ -16,19 +10,6 @@ Library          ../reddit_api.py   WITH NAME   Api
 Variables        ../variables/constants.py
 Variables        ../variables/api_methods.py
 
-Test Setup    Log In
-Test Teardown    Log Out
-
-*** Variables ***
-${search_thread_text}=  Minecraft
-${comment_text}=    Like Python
-
-*** Test Cases ***
-Case
-    Find Thread
-    ${comment_id}=  Add Comment
-    Delete Comment  ${comment_id}
-
 *** Keywords ***
 Log In
     ${token}=   Auth.get_token
@@ -39,14 +20,16 @@ Log Out
     Delete All Sessions
 
 Find Thread
-    ${params}=  Params.get_params_search_thread    ${search_thread_text}
+    [Arguments]    ${query}
+    ${params}=  Params.get_params_search_thread    ${query}
     ${response}=     GET On Session  reddit  ${search_thread}     params=${params}
 
     Status Should Be    200     ${response}
     Should Contain      ${response.json()}    names
 
 Add Comment
-    ${params}=  Params.get_params_add_comment    ${comment_text}
+    [Arguments]    ${text}
+    ${params}=  Params.get_params_add_comment    ${text}
     ${response}=     POST On Session    reddit    ${add_comment}    params=${params}
 
     Status Should Be    200     ${response}
