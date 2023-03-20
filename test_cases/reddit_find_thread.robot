@@ -8,7 +8,7 @@ Test Teardown    Log Out
 ${search_thread_text}=  Minecraft
 
 *** Test Cases ***
-Case
+Case Find Thread
     Find Thread     ${search_thread_text}
 
 
