@@ -17,7 +17,7 @@ Variables        ../variables/constants.py
 Variables        ../variables/api_methods.py
 
 Test Setup    Log In
-# Test Teardown    Log Out
+Test Teardown    Log Out
 
 *** Variables ***
 ${token}
@@ -38,7 +38,7 @@ Log In
     Create Session      reddit      ${API_URL}     verify=true     headers=${headers}
 
 Log Out
-    # ???
+    Delete All Sessions
 
 Find Thread
     ${params}=  Params.get_params_search_thread    ${search_thread_text}
