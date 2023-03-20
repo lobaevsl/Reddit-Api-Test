@@ -20,8 +20,6 @@ Test Setup    Log In
 Test Teardown    Log Out
 
 *** Variables ***
-${token}
-${headers}
 ${search_thread_text}=  Minecraft
 ${comment_text}=    Like Python
 
