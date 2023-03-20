@@ -16,7 +16,7 @@ Case Delete Comment
 *** Keywords ***
 Setup
     Log In
-    Add Comment And Get Id
+    Wait Until Keyword Succeeds    5x   5 sec    Add Comment And Get Id
 
 Add Comment And Get Id
     ${params}=   Params.get_params_add_comment    ${comment_text}

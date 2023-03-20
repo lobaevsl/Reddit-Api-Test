@@ -11,7 +11,7 @@ ${comment_id}
 
 *** Test Cases ***
 Case Add Comment
-    ${id}=  Add Comment    ${comment_text}
+    ${id}=  Wait Until Keyword Succeeds    5x   5sec    Add Comment    ${comment_text}
 
     Set Global Variable    ${comment_id}    ${id}
 
