@@ -17,7 +17,7 @@ Variables        ../variables/constants.py
 Variables        ../variables/api_methods.py
 
 Test Setup    Log In
-Test Teardown    Log Out
+# Test Teardown    Log Out
 
 *** Variables ***
 ${token}
@@ -27,8 +27,6 @@ ${comment_text}=    Like Python
 
 *** Test Cases ***
 Case
-    Create Session      reddit      ${API_URL}     verify=true     headers=${headers}
-
     Find Thread
     ${comment_id}=  Add Comment
     Delete Comment  ${comment_id}
@@ -37,6 +35,7 @@ Case
 Log In
     ${token}=   Auth.get_token
     ${headers}=   Params.get_headers    ${token}
+    Create Session      reddit      ${API_URL}     verify=true     headers=${headers}
 
 Log Out
     # ???

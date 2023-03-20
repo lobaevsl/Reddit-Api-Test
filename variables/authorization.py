@@ -4,9 +4,11 @@ from requests.auth import HTTPBasicAuth
 
 from dotenv import load_dotenv
 
+import constants
+
 
 def load_environ():
-    dotenv_path = os.path.join(os.path.dirname(__file__), 'login.env')
+    dotenv_path = os.path.join(os.path.dirname(__file__), '../login.env')
     if os.path.exists(dotenv_path):
         return load_dotenv(dotenv_path)
     return False
@@ -25,12 +27,15 @@ def get_token():
 
 
 def login(app_id, app_secret, username, password):
-    _auth = HTTPBasicAuth(app_id, app_secret)
+    auth = HTTPBasicAuth(app_id, app_secret)
     data = {'grant_type': 'password',
             'username': username,
             'password': password}
     response = requests.post('https://www.reddit.com/api/v1/access_token',
-                             auth=_auth, data=data, headers=params.get_headers(), timeout=5)
+                             auth=auth,
+                             data=data,
+                             headers={'User-Agent': constants.USER_AGENT},
+                             timeout=5)
     if 'access_token' not in response.json():
         return False
     else:
