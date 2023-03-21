@@ -19,7 +19,7 @@ Setup
     Wait Until Keyword Succeeds    5x   5 sec    Add Comment And Get Id
 
 Add Comment And Get Id
-    ${params}=   Params.get_params_add_comment    ${comment_text}
+    ${params}=   Params.Get Params Add Comment    ${comment_text}
     ${response}=     POST On Session    reddit    ${add_comment}    params=${params}
 
     Status Should Be    200     ${response}

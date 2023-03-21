@@ -12,8 +12,8 @@ Variables        ../variables/api_methods.py
 
 *** Keywords ***
 Log In
-    ${token}=   Auth.get_token
-    ${headers}=   Params.get_headers    ${token}
+    ${token}=   Auth.Get Token
+    ${headers}=   Params.Get Headers    ${token}
     Create Session      reddit      ${API_URL}     verify=true     headers=${headers}
 
 Log Out
@@ -21,7 +21,7 @@ Log Out
 
 Find Thread
     [Arguments]    ${query}
-    ${params}=  Params.get_params_search_thread    ${query}
+    ${params}=  Params.Get Params Search Thread    ${query}
     ${response}=     GET On Session  reddit  ${search_thread}     params=${params}
 
     Status Should Be    200     ${response}
@@ -29,7 +29,7 @@ Find Thread
 
 Add Comment
     [Arguments]    ${text}
-    ${params}=  Params.get_params_add_comment    ${text}
+    ${params}=  Params.Get Params Add Comment    ${text}
     ${response}=     POST On Session    reddit    ${add_comment}    params=${params}
 
     Status Should Be    200     ${response}
